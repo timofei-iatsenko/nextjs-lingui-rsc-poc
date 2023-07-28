@@ -1,10 +1,39 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+import Image from 'next/image';
+import styles from './page.module.css';
+import { setI18n } from '../../i18n/locale';
+import { loadCatalog } from '../../i18n/utils';
+import { setupI18n } from '@lingui/core';
+import { Trans } from '@lingui/macro';
+import { ClientComponent } from './client-component';
+import { Switcher } from './components/Switcher';
+import { LinguiProvider } from '../../i18n/lingui-provider';
 
-export default function Home() {
+export default async function Home({ params }) {
+  const catalog = await loadCatalog(params.locale);
+
+  const i18nSetupData = {
+    locale: params.locale,
+    messages: { [params.locale]: catalog },
+  };
+
+  const i18n = setupI18n(i18nSetupData);
+
+  setI18n(
+    i18n,
+  );
+
+
+
   return (
     <main className={styles.main}>
       <div className={styles.description}>
+        <Trans>Plural Test: How many developers?</Trans>
+
+        <LinguiProvider {...i18nSetupData}>
+          <ClientComponent></ClientComponent>
+          {/*<Switcher></Switcher>*/}
+        </LinguiProvider>
+
         <p>
           Get started by editing&nbsp;
           <code className={styles.code}>src/app/page.tsx</code>
