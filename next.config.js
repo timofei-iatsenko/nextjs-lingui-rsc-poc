@@ -14,7 +14,7 @@ class LinguiTransRscResolver {
             ...request,
             request: request.context.issuerLayer === 'rsc'
               // RSC Version without Context
-              ? path.resolve('./src/i18n/Trans.tsx')
+              ? path.resolve('./src/i18n/rsc-trans.tsx')
               // Regular version
               : '@lingui/react',
           };

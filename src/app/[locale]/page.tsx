@@ -22,8 +22,6 @@ export default async function Home({ params }) {
     i18n,
   );
 
-
-
   return (
     <main className={styles.main}>
       <div className={styles.description}>
@@ -31,7 +29,7 @@ export default async function Home({ params }) {
 
         <LinguiProvider {...i18nSetupData}>
           <ClientComponent></ClientComponent>
-          {/*<Switcher></Switcher>*/}
+          <Switcher></Switcher>
         </LinguiProvider>
 
         <p>
