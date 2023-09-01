@@ -1,6 +1,6 @@
 import React from "react"
 
-import { getI18n } from './locale';
+import { getI18n } from './i18n';
 import { TransNoContext, TransProps } from '@lingui/react/server';
 
 export function Trans(props: TransProps): React.ReactElement<any, any> | null {

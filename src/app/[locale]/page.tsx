@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import styles from './page.module.css';
-import { setI18n } from '../../i18n/locale';
+import { setI18n } from '../../i18n/i18n';
 import { loadCatalog } from '../../i18n/utils';
 import { setupI18n } from '@lingui/core';
 import { Trans } from '@lingui/macro';
