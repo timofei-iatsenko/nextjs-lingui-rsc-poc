@@ -2,89 +2,105 @@ This is working PoC of [Lingui](https://lingui.dev) with [React Server Component
 
 ## How it works
 
-There are few key moments making this work:
+1. "simulate" context feature in RSC with `React.cache` function. Having that, we can use `<Trans>` in any place in RSC tree without prop drilling.
 
-1. I was able to "simulate" context feature in RSC with `React.cache` function. Having that, we can use `<Trans>` in any place in RSC tree without prop drilling.
-
-```ts
-// /src/i18n/i18n.ts
-import { cache } from 'react';
-import type { I18n } from '@lingui/core';
-
-export function setI18n(i18n: I18n) {
-  getLinguiCtx().current = i18n;
-}
-
-export function getI18n(): I18n | undefined {
-  return getLinguiCtx().current;
-}
-
-const getLinguiCtx = cache((): {current: I18n | undefined} => {
-  return {current: undefined};
-})
-```
-
-Then we need to setup Lingui for RSC in page component:
-```ts
-// /src/app/[locale]/page.tsx
-export default async function Home({ params }) {
-  const catalog = await loadCatalog(params.locale);
-
-  const i18n = setupI18n({
-    locale: params.locale,
-    messages: { [params.locale]: catalog },
-  });
-
-  setI18n(
-    i18n,
-  );
-}
-```
-And then in any RSC:
-```ts
-const i18n = getI18n()
-```
+   ```ts
+   // /src/i18n/i18n.ts
+   import { cache } from 'react';
+   import type { I18n } from '@lingui/core';
+   
+   export function setI18n(i18n: I18n) {
+     getLinguiCtx().current = i18n;
+   }
+   
+   export function getI18n(): I18n | undefined {
+     return getLinguiCtx().current;
+   }
+   
+   const getLinguiCtx = cache((): {current: I18n | undefined} => {
+     return {current: undefined};
+   })
+   ```
+   
+   Then we need to setup Lingui for RSC in page component:
+   ```ts
+   // /src/app/[locale]/page.tsx
+   export default async function Home({ params }) {
+     const catalog = await loadCatalog(params.locale);
+   
+     const i18n = setupI18n({
+       locale: params.locale,
+       messages: { [params.locale]: catalog },
+     });
+   
+     setI18n(
+       i18n,
+     );
+   }
+   ```
+   And then in any RSC:
+   ```ts
+   const i18n = getI18n()
+   ```
 
 2. Withing this being in place, we have to create a separate version of `<Trans>` which is using `getI18n()` instead of `useContext()`. 
    
    Lingui since version `4.4.1` exposing separate endpoint `@lingui/react/server` with a
    `<TransNoContext>` component which is not using Context feature. 
-   Our new component is a wrapper around that version.
+   Our new component is a wrapper around `<TransNoContext>`.
 
-3. Having this is already enough, you can use RSC version in the server components and regular version in client. But that is not really great DX, we can automatically detect RSC components and swap implementation thanks to webpack magic. This is done by:
+   ```typescript jsx
+   import React from "react"
+   
+   import { getI18n } from './i18n';
+   import { TransNoContext, TransProps } from '@lingui/react/server';
+   
+   export function Trans(props: TransProps): React.ReactElement<any, any> | null {
+     const i18n = getI18n()
+   
+     if (!i18n) {
+       throw new Error('Lingui for RSC is not initialized. Use `setI18n()` first in root of your RSC tree.');
+     }
+   
+     return <TransNoContext {...props} lingui={{ i18n }}/>
+   }
+   ```
+
+3. Having this is already enough, you can use RSC version in the server components and regular version in client. But that is not really great DX, 
+   we can automatically detect RSC components and swap implementation thanks to webpack magic. This is done by:
     - macro configured to insert `import {Trans} from 'virtual-lingui-trans'`
     - webpack has a custom resolve plugin which depending on the resolver context will resolve the virtual name to RSC or Regular version.
 
-```js
-const TRANS_VIRTUAL_MODULE_NAME = 'virtual-lingui-trans';
-
-class LinguiTransRscResolver {
-  apply(resolver) {
-    const target = resolver.ensureHook('resolve');
-    resolver
-      .getHook('resolve')
-      .tapAsync('LinguiTransRscResolver', (request, resolveContext, callback) => {
-
-        if (request.request === TRANS_VIRTUAL_MODULE_NAME) {
-          const req = {
-            ...request,
-            // nextjs putting  `issuerLayer: 'rsc' | 'ssr'` into the context of resolver. 
-            // We can use it for our purpose:
-            request: request.context.issuerLayer === 'rsc'
-              // RSC Version without Context
-              ? path.resolve('./src/i18n/rsc-trans.tsx')
-              // Regular version
-              : '@lingui/react',
-          };
-
-          return resolver.doResolve(target, req, null, resolveContext, callback);
-        }
-
-        callback();
-      });
-  }
-}
-```
+   ```js
+   const TRANS_VIRTUAL_MODULE_NAME = 'virtual-lingui-trans';
+   
+   class LinguiTransRscResolver {
+     apply(resolver) {
+       const target = resolver.ensureHook('resolve');
+       resolver
+         .getHook('resolve')
+         .tapAsync('LinguiTransRscResolver', (request, resolveContext, callback) => {
+   
+           if (request.request === TRANS_VIRTUAL_MODULE_NAME) {
+             const req = {
+               ...request,
+               // nextjs putting  `issuerLayer: 'rsc' | 'ssr'` into the context of resolver. 
+               // We can use it for our purpose:
+               request: request.context.issuerLayer === 'rsc'
+                 // RSC Version without Context
+                 ? path.resolve('./src/i18n/rsc-trans.tsx')
+                 // Regular version
+                 : '@lingui/react',
+             };
+   
+             return resolver.doResolve(target, req, null, resolveContext, callback);
+           }
+   
+           callback();
+         });
+     }
+   }
+   ```
 Implementation consideration:
 
 - Webpack magic uses undocumented feature of NextJS (`issuerLayer: 'rsc' | 'ssr'`), that might break at any moment without semver bumping. 
