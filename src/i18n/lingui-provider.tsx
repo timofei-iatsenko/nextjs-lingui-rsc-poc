@@ -1,14 +1,18 @@
+
 'use client';
+import '@/i18n/i18n'
 
-import { setupI18n } from '@lingui/core';
+import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
-import { PropsWithChildren } from 'react';
+import { useEffect, type PropsWithChildren } from 'react';
 
-export function LinguiProvider({children, messages, locale}: PropsWithChildren<{messages: any, locale: string}>) {
-  return <I18nProvider i18n={setupI18n({
-    messages,
-    locale
-  })}>
-    {children}
-  </I18nProvider>
+export function LinguiProvider({children, locale}: PropsWithChildren<{ locale: string }>) {
+
+  i18n.activate(locale)
+
+  return  (
+    <I18nProvider  i18n={i18n}>
+      {children}
+    </I18nProvider>
+  )
 }
