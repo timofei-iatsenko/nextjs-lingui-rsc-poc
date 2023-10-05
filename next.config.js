@@ -40,6 +40,12 @@ const nextConfig = {
   },
 
   webpack: (config) => {
+    config.module.rules.push({
+      test: /locales\/.*\.(json|po)$/,
+      loader: '@lingui/loader',
+    })
+
+
     config.resolve.plugins.push(new LinguiTransRscResolver());
     return config;
   },

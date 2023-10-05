@@ -1,11 +1,9 @@
 import React from "react"
 
-import { getI18n } from './i18n';
 import { TransNoContext, TransProps } from '@lingui/react/server';
+import { i18n } from "@lingui/core";
 
 export function Trans(props: TransProps): React.ReactElement<any, any> | null {
-  const i18n = getI18n()
-
   if (!i18n) {
     throw new Error('Lingui for RSC is not initialized. Use `setI18n()` first in root of your RSC tree.');
   }

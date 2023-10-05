@@ -1,14 +1,12 @@
-import { cache } from 'react';
-import { I18n } from '@lingui/core';
+import {  i18n } from '@lingui/core';
 
-export function setI18n(locale: I18n) {
-  getLocaleCtx().current = locale;
-}
 
-export function getI18n(): I18n | undefined {
-  return getLocaleCtx().current;
-}
+import { messages as en } from '@/locales/en.po'
+import { messages as es } from '@/locales/es.po'
 
-const getLocaleCtx = cache((): {current: I18n | undefined} => {
-  return {current: undefined};
+i18n.load({
+  en,
+  es
 })
+
+i18n.activate('en')

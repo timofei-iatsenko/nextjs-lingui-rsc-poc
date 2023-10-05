@@ -17,7 +17,7 @@ export function Switcher() {
   const router = useRouter()
   const { i18n } = useLingui()
   const pathname = usePathname()
-
+  console.log(i18n.locale)
   // router.
   // const [locale, setLocale] = useState<LOCALES>(
   //   router.locale!.split('-')[0] as LOCALES
