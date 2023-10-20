@@ -1,36 +1,23 @@
 import Image from 'next/image';
 import styles from './page.module.css';
-import { setI18n } from '../../i18n/i18n';
-import { loadCatalog } from '../../i18n/utils';
-import { setupI18n } from '@lingui/core';
 import { Trans } from '@lingui/macro';
 import { ClientComponent } from './client-component';
 import { Switcher } from './components/Switcher';
-import { LinguiProvider } from '../../i18n/lingui-provider';
+import Link from "next/link";
+import { useLinguiSSR } from '@/i18n/i18n';
 
-export default async function Home({ params }) {
-  const catalog = await loadCatalog(params.locale);
-
-  const i18nSetupData = {
-    locale: params.locale,
-    messages: { [params.locale]: catalog },
-  };
-
-  const i18n = setupI18n(i18nSetupData);
-
-  setI18n(
-    i18n,
-  );
+export default async function Home({params}) {
+  // this is not needed here because we have the context from the layout, but it crashes when navigating from the nested page.
+  // uncomment it to make it work in all cases.
+   //await useLinguiSSR(params.locale);
 
   return (
     <main className={styles.main}>
       <div className={styles.description}>
+        <Link href={`${params.locale}/nested`}><Trans><b>Nested page</b></Trans></Link>
         <Trans>Plural Test: How many developers?</Trans>
-
-        <LinguiProvider {...i18nSetupData}>
-          <ClientComponent></ClientComponent>
-          <Switcher></Switcher>
-        </LinguiProvider>
+        <ClientComponent></ClientComponent>
+        <Switcher></Switcher>
 
         <p>
           Get started by editing&nbsp;
