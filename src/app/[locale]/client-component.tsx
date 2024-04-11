@@ -1,7 +1,7 @@
 'use client';
 
-import { Trans } from '@lingui/macro';
+import { Trans } from '@lingui/react/macro';
 
 export function ClientComponent() {
-    return (<Trans>I'm Client Component</Trans>)
+    return (<Trans>I&apos;m Client Component</Trans>)
 }

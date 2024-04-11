@@ -2,7 +2,7 @@ const nextConfig = require('./next.config')
 
 /** @type {import('@lingui/conf').LinguiConfig} */
 module.exports = {
-  locales: ['en', 'es'],
+  locales: ['en', 'sr', 'es', 'pseudo'],
   pseudoLocale: 'pseudo',
   sourceLocale: 'en',
   fallbackLocales: {
@@ -10,7 +10,7 @@ module.exports = {
   },
   catalogs: [
     {
-      path: '<rootDir>/src/locales/{locale}',
+      path: 'src/locales/{locale}',
       include: ['src/']
     }
   ]

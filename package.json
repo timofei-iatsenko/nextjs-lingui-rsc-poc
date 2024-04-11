@@ -1,29 +1,29 @@
 {
-  "name": "nexts-app-folder-lingui",
+  "name": "nextjs-app-example",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "debug": "NODE_OPTIONS='--inspect' next dev",
+    "build": "yarn lingui:extract && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lingui:extract": "lingui extract --clean",
+    "test": "yarn build"
   },
   "dependencies": {
-    "@lingui/core": "4.5.0",
-    "@lingui/macro": "4.5.0",
-    "@lingui/react": "4.5.0",
-    "@lingui/swc-plugin": "^4.0.4",
-    "@types/node": "20.4.5",
-    "@types/react": "18.2.17",
-    "@types/react-dom": "18.2.7",
-    "eslint": "8.45.0",
-    "eslint-config-next": "13.4.12",
-    "next": "13.4.12",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "typescript": "5.1.6"
+    "@lingui/core": "^4.8.4",
+    "@lingui/react": "^4.8.4",
+    "next": "14.1.4",
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "@lingui/loader": "^4.5.0"
+    "@lingui/cli": "^4.8.4",
+    "@lingui/loader": "^4.8.4",
+    "@lingui/swc-plugin": "4.0.6",
+    "@types/react": "^18",
+    "eslint": "8.35.0",
+    "eslint-config-next": "12.3.4",
+    "typescript": "^5.4.5"
   }
 }
