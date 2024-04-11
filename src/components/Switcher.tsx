@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation'
 import { msg } from '@lingui/core/macro'
 import { MessageDescriptor } from '@lingui/core'
 import { useLingui } from '@lingui/react'
@@ -15,13 +15,9 @@ const languages: { [key: string]: MessageDescriptor } = {
 
 export function Switcher() {
   const router = useRouter()
+  const { locale } = useParams<{ locale: string }>()
   const { i18n } = useLingui()
-  const pathname = usePathname()
-
-  // router.
-  // const [locale, setLocale] = useState<LOCALES>(
-  //   router.locale!.split('-')[0] as LOCALES
-  // )
+  const currentLocale = locale!.split('-')[0]
 
   // disabled for DEMO - so we can demonstrate the 'pseudo' locale functionality
   // if (process.env.NEXT_PUBLIC_NODE_ENV !== 'production') {
@@ -29,12 +25,12 @@ export function Switcher() {
   // }
 
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const newLocale = event.target.value as LOCALES
-    router.push(pathname.replace(`/${i18n.locale}`, `/${newLocale}`))
+    const locale = event.target.value as LOCALES
+    router.push(`/${locale}`)
   }
 
   return (
-    <select value={i18n.locale} onChange={handleChange}>
+    <select value={currentLocale} onChange={handleChange}>
       {Object.keys(languages).map((locale) => {
         return (
           <option value={locale} key={locale}>

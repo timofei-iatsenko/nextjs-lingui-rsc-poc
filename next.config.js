@@ -1,48 +1,19 @@
-const path = require('path');
-
-const TRANS_VIRTUAL_MODULE_NAME = 'virtual-lingui-trans';
-
-class LinguiTransRscResolver {
-  apply(resolver) {
-    const target = resolver.ensureHook('resolve');
-    resolver
-      .getHook('resolve')
-      .tapAsync('LinguiTransRscResolver', (request, resolveContext, callback) => {
-
-        if (request.request === TRANS_VIRTUAL_MODULE_NAME) {
-          const req = {
-            ...request,
-            request: request.context.issuerLayer === 'rsc'
-              // RSC Version without Context
-              ? path.resolve('./src/i18n/rsc-trans.tsx')
-              // Regular version
-              : '@lingui/react',
-          };
-
-          return resolver.doResolve(target, req, null, resolveContext, callback);
-        }
-
-        callback();
-      });
-  }
-}
-
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+module.exports = {
+  webpack: (config, options) => {
+    config.module.rules.push({
+      test: /\.po/,
+      use: [
+        {
+          loader: '@lingui/loader',
+        },
+      ],
+    })
+    return config
+  },
   experimental: {
     swcPlugins: [
-      ['@lingui/swc-plugin', {
-        'runtimeModules': {
-          'trans': [TRANS_VIRTUAL_MODULE_NAME, 'Trans'],
-        },
-      }],
+      ['@lingui/swc-plugin', {}],
     ],
   },
-
-  webpack: (config) => {
-    config.resolve.plugins.push(new LinguiTransRscResolver());
-    return config;
-  },
 }
-
-module.exports = nextConfig

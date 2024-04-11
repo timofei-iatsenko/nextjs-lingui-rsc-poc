@@ -5,7 +5,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: en\n"
+"Language: sr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
@@ -15,40 +15,40 @@ msgstr ""
 
 #: src/components/Developers.tsx:22
 msgid "{selected, plural, one {Developer} other {Developers}}"
-msgstr "{selected, plural, one {Developer} other {Developers}}"
+msgstr "{selected, plural, one {Програмер} other {Програмера}}"
 
 #: src/app/[locale]/components/Switcher.tsx:11
 #: src/components/Switcher.tsx:11
 msgid "English"
-msgstr "English"
+msgstr "Енглески"
 
 #: src/app/[locale]/client-component.tsx:6
 msgid "I'm Client Component"
-msgstr "I'm Client Component"
+msgstr ""
 
 #. js-lingui-explicit-id
 #: src/components/AboutText.tsx:7
 msgid "next-explanation"
-msgstr "Next.js is an open-source React front-end development web framework that enables functionality such as server-side rendering and generating static websites for React based web applications. It is a production-ready framework that allows developers to quickly create static and dynamic JAMstack websites and is used widely by many large companies."
+msgstr "Некст.јс је отворени изворни Реацт-ов развојни вебоквир који омогућава функционалност као што је приказивање на страни сервера и генерисање статичких веблокација за веб апликације засноване на Реацт-у."
 
 #: src/components/Developers.tsx:11
 msgid "Plural Test: How many developers?"
-msgstr "Plural Test: How many developers?"
+msgstr "Тест за Множину: Колико програмера?"
 
 #: src/app/[locale]/components/Switcher.tsx:12
 #: src/components/Switcher.tsx:12
 msgid "Serbian"
-msgstr "Serbian"
+msgstr "Српски"
 
 #: src/app/[locale]/components/Switcher.tsx:13
 #: src/components/Switcher.tsx:13
 msgid "Spanish"
-msgstr "Spanish"
+msgstr "Шпански"
 
 #: src/app/[locale]/layout.tsx:22
 msgid "Translation Demo"
-msgstr "Translation Demo"
+msgstr "Демо Превод"
 
 #: src/app/[locale]/page.tsx:25
 msgid "Welcome to <0>Next.js!</0>"
-msgstr "Welcome to <0>Next.js!</0>"
+msgstr "Добродошли у <0>Нект.јс!</0>"
